@@ -1,0 +1,18 @@
+---
+- name: Déploiement de la base de données
+  hosts: database_servers
+  tasks:
+    - name: Installer MySQL
+      yum:
+        name: mysql
+        state: present
+    - name: Copier le fichier de configuration
+      template:
+        src: database_config.j2
+        dest: /etc/mysql/my.cnf
+      notify: Redémarrer MySQL
+  handlers:
+    - name: Redémarrer MySQL
+      service:
+        name: mysql
+        state: restarted
